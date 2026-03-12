@@ -136,7 +136,7 @@ export class ChunkMesher {
         arr_nor.push(nx, ny, nz);
       }
 
-      arr_uv.push(u0, v1, u0, v0, u1, v0, u1, v1);
+      arr_uv.push(u0, v0, u0, v1, u1, v1, u1, v0);
 
       if (flip) {
         arr_idx.push(base, base+2, base+1, base, base+3, base+2);

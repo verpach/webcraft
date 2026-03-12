@@ -80,8 +80,7 @@ html, body {
 
 #hunger-bar {
   left: 50%;
-  transform: translateX(-50%) translateX(10px);
-  flex-direction: row-reverse;
+  transform: translateX(-50%) translateX(120px);
 }
 
 .bar-label {
