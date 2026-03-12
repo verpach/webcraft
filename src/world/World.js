@@ -43,6 +43,11 @@ export class World {
         if (!this.chunks.has(key)) {
           this.getOrCreateChunk(cx, cz);
           this._markDirty(cx, cz);
+          // Also mark neighboring chunks dirty so they rebuild faces at the boundary
+          this._markDirty(cx - 1, cz);
+          this._markDirty(cx + 1, cz);
+          this._markDirty(cx, cz - 1);
+          this._markDirty(cx, cz + 1);
         }
       }
     }
@@ -135,17 +140,29 @@ export class World {
       }
 
       // Track last air position for face detection
-      const prevBx = Math.floor(pos.x - step.x);
-      const prevBy = Math.floor(pos.y - step.y);
-      const prevBz = Math.floor(pos.z - step.z);
+      lastAirPos = new THREE.Vector3(
+        Math.floor(pos.x - step.x),
+        Math.floor(pos.y - step.y),
+        Math.floor(pos.z - step.z)
+      );
+
+      const prevBx = lastAirPos.x;
+      const prevBy = lastAirPos.y;
+      const prevBz = lastAirPos.z;
 
       if (bx !== prevBx || by !== prevBy || bz !== prevBz) {
-        const dx = bx - prevBx;
-        const dy = by - prevBy;
-        const dz = bz - prevBz;
-        let face = new THREE.Vector3(-dx, -dy, -dz);
-        lastAirFace = face;
-        lastAirPos = new THREE.Vector3(bx, by, bz);
+        const fdx = bx - prevBx;
+        const fdy = by - prevBy;
+        const fdz = bz - prevBz;
+        // Pick the dominant axis for face normal
+        const ax = Math.abs(fdx), ay = Math.abs(fdy), az = Math.abs(fdz);
+        if (ax >= ay && ax >= az) {
+          lastAirFace = new THREE.Vector3(-Math.sign(fdx), 0, 0);
+        } else if (ay >= ax && ay >= az) {
+          lastAirFace = new THREE.Vector3(0, -Math.sign(fdy), 0);
+        } else {
+          lastAirFace = new THREE.Vector3(0, 0, -Math.sign(fdz));
+        }
       }
 
       pos.add(step);
