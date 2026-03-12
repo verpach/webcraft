@@ -56,6 +56,7 @@ export class Chunk {
         map: textureManager.getTexture(),
         alphaTest: 0.1,
         transparent: false,
+        side: THREE.DoubleSide,
       });
       this.mesh = new THREE.Mesh(geo, mat);
       this.mesh.position.set(wx, 0, wz);
