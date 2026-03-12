@@ -54,7 +54,7 @@ export class Player {
     if (isSprint && !isSneak) speed *= SPRINT_MULTIPLIER;
     if (isSneak) speed *= SNEAK_MULTIPLIER;
 
-    if (this.inWater) speed *= 0.4;
+    if (this.inWater || this.feetInWater) speed *= 0.25;
     if (this.flying) speed *= 2;
 
     let moveX = 0, moveZ = 0;
@@ -87,9 +87,9 @@ export class Player {
       if (isJump) this.velocity.y = PLAYER_SPEED * 2;
       else if (controls.isKey('ShiftLeft')) this.velocity.y = -PLAYER_SPEED * 2;
       else this.velocity.y = 0;
-    } else if (this.inWater) {
+    } else if (this.inWater || this.feetInWater) {
       this.velocity.y += GRAVITY * dt * 0.3;
-      if (isJump) this.velocity.y = 3;
+      if (isJump) this.velocity.y = 4.5;
       this.velocity.y = clamp(this.velocity.y, -3, 3);
     } else {
       this.velocity.y += GRAVITY * dt;

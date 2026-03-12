@@ -47,7 +47,7 @@ export class Physics {
       if (collidesAt(position.x + dx, newY, position.z)) {
         if (dy < 0) {
           // Snap to floor
-          position.y = Math.ceil(position.y);
+          position.y = Math.floor(position.y + dy) + 1;
         } else {
           // Snap to ceiling
           position.y = Math.floor(position.y);

@@ -127,7 +127,7 @@ export class Game {
     } else {
       // Find spawn
       const spawnX = 0, spawnZ = 0;
-      const spawnY = generator.getHeight(spawnX, spawnZ) + 2;
+      const spawnY = generator.getHeight(spawnX, spawnZ) + 1;
       this.player.teleport(spawnX, spawnY, spawnZ);
     }
 
@@ -299,7 +299,17 @@ export class Game {
       this._breakProgress += dt;
 
       if (this._breakProgress >= breakTime) {
-        this.world.setBlock(x, y, z, BLOCKS.AIR);
+        // Check if any adjacent block is water; if so, fill with water instead of air
+        let adjacentWater = false;
+        const dirs = [[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]];
+        for (const [adx, ady, adz] of dirs) {
+          const adjBlock = this.world.getBlock(x + adx, y + ady, z + adz);
+          if (BLOCK_DATA[adjBlock] && BLOCK_DATA[adjBlock].liquid) {
+            adjacentWater = true;
+            break;
+          }
+        }
+        this.world.setBlock(x, y, z, adjacentWater ? BLOCKS.WATER : BLOCKS.AIR);
         this.inventory.addItem(blockId, 1);
         this._breakingBlock = null;
         this._breakProgress = 0;
