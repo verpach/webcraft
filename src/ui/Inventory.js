@@ -4,7 +4,7 @@ export class Inventory {
   constructor(container) {
     this.container = container;
     this.slots = new Array(36).fill(null); // 27 inventory + 9 hotbar
-    this.hotbarSlots = this.slots.slice(27); // reference not copy - managed externally
+    this.hotbarSlots = this.slots.slice(27);
     this.isOpen = false;
     this.dragItem = null;
     this.dragFromSlot = -1;

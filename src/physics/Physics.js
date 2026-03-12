@@ -47,10 +47,10 @@ export class Physics {
       if (collidesAt(position.x + dx, newY, position.z)) {
         if (dy < 0) {
           // Snap to floor
-          position.y = Math.floor(position.y) + (dy < 0 ? 0 : 0);
-          // Find exact floor
-          const floorY = Math.floor(position.y);
-          position.y = floorY;
+          position.y = Math.ceil(position.y);
+        } else {
+          // Snap to ceiling
+          position.y = Math.floor(position.y);
         }
         velocity.y = 0;
         dy = 0;

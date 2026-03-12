@@ -6,7 +6,7 @@ import { seededRandom } from '../utils/helpers.js';
 export class TerrainGenerator {
   constructor(seed) {
     this.seed = seed;
-    const rng = seededRandom(seed);
+    this._rng = seededRandom(seed + 'gen');
 
     // Multiple noise functions with different seeds
     const mkRng = (s) => seededRandom(seed + s);
@@ -110,13 +110,13 @@ export class TerrainGenerator {
 
     const placeVein = (blockId, minY, maxY, veins, size) => {
       for (let v = 0; v < veins; v++) {
-        const lx = Math.floor(Math.random() * CHUNK_SIZE);
-        const ly = minY + Math.floor(Math.random() * (maxY - minY));
-        const lz = Math.floor(Math.random() * CHUNK_SIZE);
+        const lx = Math.floor(this._rng() * CHUNK_SIZE);
+        const ly = minY + Math.floor(this._rng() * (maxY - minY));
+        const lz = Math.floor(this._rng() * CHUNK_SIZE);
         for (let s = 0; s < size; s++) {
-          const ox = lx + Math.floor(Math.random() * 3 - 1);
-          const oy = ly + Math.floor(Math.random() * 3 - 1);
-          const oz = lz + Math.floor(Math.random() * 3 - 1);
+          const ox = lx + Math.floor(this._rng() * 3 - 1);
+          const oy = ly + Math.floor(this._rng() * 3 - 1);
+          const oz = lz + Math.floor(this._rng() * 3 - 1);
           if (ox >= 0 && ox < CHUNK_SIZE && oy > 0 && oy < CHUNK_HEIGHT && oz >= 0 && oz < CHUNK_SIZE) {
             if (blocks[idx(ox, oy, oz)] === BLOCKS.STONE) {
               blocks[idx(ox, oy, oz)] = blockId;
@@ -158,18 +158,18 @@ export class TerrainGenerator {
         } else if (biome === 'forest') {
           const tv = this.treeNoise(wx * 0.2, wz * 0.2);
           if (tv > 0.6 && lx >= 2 && lx <= 13 && lz >= 2 && lz <= 13) {
-            this._placeTree(blocks, lx, lz, surfaceY + 1, Math.random() > 0.5 ? 'birch' : 'oak');
+            this._placeTree(blocks, lx, lz, surfaceY + 1, this._rng() > 0.5 ? 'birch' : 'oak');
           }
         } else {
           // Plains
           const tv = this.treeNoise(wx * 0.2, wz * 0.2);
           if (tv > 0.8 && lx >= 2 && lx <= 13 && lz >= 2 && lz <= 13) {
             this._placeTree(blocks, lx, lz, surfaceY + 1, 'oak');
-          } else if (Math.random() < 0.04) {
-            const tall = Math.random() < 0.5;
-            const flower = Math.random() < 0.3;
+          } else if (this._rng() < 0.04) {
+            const tall = this._rng() < 0.5;
+            const flower = this._rng() < 0.3;
             if (flower) {
-              const fBlock = Math.random() < 0.5 ? BLOCKS.FLOWER_RED : BLOCKS.FLOWER_YELLOW;
+              const fBlock = this._rng() < 0.5 ? BLOCKS.FLOWER_RED : BLOCKS.FLOWER_YELLOW;
               if (surfaceY + 1 < CHUNK_HEIGHT) blocks[idx(lx, surfaceY + 1, lz)] = fBlock;
             } else if (tall) {
               if (surfaceY + 1 < CHUNK_HEIGHT) blocks[idx(lx, surfaceY + 1, lz)] = BLOCKS.TALL_GRASS;
@@ -184,7 +184,7 @@ export class TerrainGenerator {
     const idx = (x, y, z) => y * CHUNK_SIZE * CHUNK_SIZE + z * CHUNK_SIZE + x;
     const logBlock = type === 'birch' ? BLOCKS.BIRCH_LOG : BLOCKS.OAK_LOG;
     const leafBlock = type === 'birch' ? BLOCKS.BIRCH_LEAVES : BLOCKS.OAK_LEAVES;
-    const height = 4 + Math.floor(Math.random() * 3);
+    const height = 4 + Math.floor(this._rng() * 3);
 
     // Trunk
     for (let i = 0; i < height; i++) {
