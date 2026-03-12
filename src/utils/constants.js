@@ -1,0 +1,16 @@
+export const CHUNK_SIZE = 16;
+export const CHUNK_HEIGHT = 256;
+export const SEA_LEVEL = 64;
+export const RENDER_DISTANCE = 6;
+export const GRAVITY = -20;
+export const JUMP_FORCE = 8;
+export const PLAYER_SPEED = 5;
+export const SPRINT_MULTIPLIER = 1.6;
+export const SNEAK_MULTIPLIER = 0.3;
+export const PLAYER_HEIGHT = 1.8;
+export const PLAYER_WIDTH = 0.6;
+export const TEXTURE_SIZE = 16;
+export const ATLAS_SIZE = 16;
+export const MAX_BLOCK_LIGHT = 15;
+export const TICK_RATE = 20;
+export const AUTOSAVE_INTERVAL = 60000;
